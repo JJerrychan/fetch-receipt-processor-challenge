@@ -1,0 +1,18 @@
+{
+  "name": "fetch-receipt-processor-challenge",
+  "version": "1.0.0",
+  "description": "This is my fetch receipt processor challenge",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JJerrychan/fetch-receipt-processor-challenge.git"
+  },
+  "author": "Junjie Chen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JJerrychan/fetch-receipt-processor-challenge/issues"
+  }
+}
