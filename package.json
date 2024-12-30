@@ -4,6 +4,7 @@
   "description": "This is my fetch receipt processor challenge",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,5 +15,10 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/JJerrychan/fetch-receipt-processor-challenge/issues"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "uuid": "^11.0.3"
   }
 }

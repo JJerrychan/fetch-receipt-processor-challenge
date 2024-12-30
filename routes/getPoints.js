@@ -1,0 +1,20 @@
+const express = require('express');
+const {getPoints, checkReceiptId} = require("../data");
+const router = express.Router();
+
+router.get('/:id/points', async (req, res) => {
+    const receiptId = req.params.id;
+    try {
+        if (!checkReceiptId(receiptId)) {
+            res.status(404).json({Messages: 'No receipt found for that ID.'});
+            return;
+        }
+        const points = getPoints(receiptId);
+        res.json({points: points});
+    } catch (error) {
+        console.error('Error getting points:', error.response ? error.response.data : error.message);
+        res.status(500).json({error: 'Internal Server Error'});
+    }
+});
+
+module.exports = router;
