@@ -2,7 +2,7 @@ const {v4: uuidv4} = require('uuid');
 
 const receipts = {};
 
-function checkReceiptId(receiptId) {
+function isReceiptIdExist(receiptId) {
     return receipts[receiptId];
 }
 
@@ -10,6 +10,40 @@ function processReceipt(receipt) {
     const receiptId = uuidv4();
     receipts[receiptId] = calculatePoints(receipt);
     return receiptId;
+}
+
+function validateReceipt(receipt) {
+    if (!receipt || typeof receipt !== 'object') {
+        throw new Error('The receipt is invalid.');
+    }
+
+    if (!receipt.retailer || !receipt.total || !receipt.items || !receipt.purchaseDate || !receipt.purchaseTime) {
+        throw new Error('The receipt is invalid.');
+    }
+
+    if (typeof receipt.retailer !== 'string' || typeof receipt.total !== 'string' || !Array.isArray(receipt.items) || typeof receipt.purchaseDate !== 'string' || typeof receipt.purchaseTime !== 'string') {
+        throw new Error('The receipt is invalid.');
+    }
+
+    // Validate fields using regex patterns
+    const retailerPattern = /^[\w\s\-&]+$/;
+    const totalPattern = /^\d+\.\d{2}$/;
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    const timePattern = /^\d{2}:\d{2}$/;
+    const itemDescriptionPattern = /^[\w\s\-]+$/;
+    const itemPricePattern = /^\d+\.\d{2}$/;
+
+    if (!retailerPattern.test(receipt.retailer) || !totalPattern.test(receipt.total) || !datePattern.test(receipt.purchaseDate) || !timePattern.test(receipt.purchaseTime)) {
+        throw new Error('The receipt is invalid.');
+    }
+
+    if (receipt.items.some(item => !itemDescriptionPattern.test(item.shortDescription) || !itemPricePattern.test(item.price))) {
+        throw new Error('The receipt is invalid.');
+    }
+
+    if (receipt.items.some(item => typeof item.shortDescription !== 'string' || typeof item.price !== 'string')) {
+        throw new Error('The receipt is invalid.');
+    }
 }
 
 function calculatePoints(receipt) {
@@ -58,5 +92,5 @@ function getPoints(receiptId) {
 }
 
 module.exports = {
-    processReceipt, getPoints, checkReceiptId
+    processReceipt, getPoints, isReceiptIdExist,validateReceipt
 };

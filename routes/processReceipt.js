@@ -1,10 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const {processReceipt} = require('../data/receiptsStore');
+const {validateReceipt} = require("../data");
 
 router.post('/', async (req, res) => {
+    const receipt = req.body;
     try {
-        const receiptId = processReceipt(req.body);
+        validateReceipt(receipt);
+    } catch (error) {
+        res.status(400).json({message: error.message});
+        return;
+    }
+    try {
+        const receiptId = processReceipt(receipt);
         res.json({id: receiptId});
     } catch (error) {
         console.error('Error processing receipt:', error.message);

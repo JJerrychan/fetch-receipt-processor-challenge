@@ -1,11 +1,11 @@
 const express = require('express');
-const {getPoints, checkReceiptId} = require("../data");
+const {getPoints, isReceiptIdExist} = require("../data");
 const router = express.Router();
 
 router.get('/:id/points', async (req, res) => {
     const receiptId = req.params.id;
     try {
-        if (!checkReceiptId(receiptId)) {
+        if (!isReceiptIdExist(receiptId)) {
             res.status(404).json({Messages: 'No receipt found for that ID.'});
             return;
         }
