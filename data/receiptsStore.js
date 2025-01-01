@@ -2,16 +2,30 @@ const {v4: uuidv4} = require('uuid');
 
 const receipts = {};
 
+/**
+ * Check if the receipt ID exists in the receipts object.
+ * @param {string} receiptId - The receipt ID.
+ * @returns {boolean} - True if the receipt ID exists, otherwise false.
+ */
 function isReceiptIdExist(receiptId) {
     return receipts[receiptId];
 }
 
+/**
+ * Process the receipt and calculate the points.
+ * @param receipt
+ * @returns {string | Uint8Array}
+ */
 function processReceipt(receipt) {
     const receiptId = uuidv4();
     receipts[receiptId] = calculatePoints(receipt);
     return receiptId;
 }
 
+/**
+ * Validate the receipt object, checking for required fields and field types.
+ * @param receipt
+ */
 function validateReceipt(receipt) {
     if (!receipt || typeof receipt !== 'object') {
         throw new Error('The receipt is invalid.');
@@ -46,6 +60,18 @@ function validateReceipt(receipt) {
     }
 }
 
+/**
+ * Calculate the points for the receipt, based on the following criteria:
+ * 1. 1 point for every alphanumeric character in the retailer name.
+ * 2. 50 points if the total is a round dollar amount with no cents.
+ * 3. 25 points if the total is a multiple of 0.25.
+ * 4. 5 points for every two items on the receipt.
+ * 5. 0.2*price points for item descriptions that are a multiple of 3 in length.
+ * 6. 6 points if the day in the purchase date is odd.
+ * 7. 10 points if the time of purchase is after 2:00pm and before 4:00pm.
+ * @param receipt
+ * @returns {number}
+ */
 function calculatePoints(receipt) {
     let points = 0;
 
@@ -87,10 +113,15 @@ function calculatePoints(receipt) {
     return points;
 }
 
+/**
+ * Get the points for the receipt with the specified ID.
+ * @param {string} receiptId - The receipt ID.
+ * @returns {number} - The points for the receipt.
+ */
 function getPoints(receiptId) {
     return receipts[receiptId];
 }
 
 module.exports = {
-    processReceipt, getPoints, isReceiptIdExist,validateReceipt
+    processReceipt, getPoints, isReceiptIdExist, validateReceipt
 };
